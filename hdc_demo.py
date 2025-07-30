@@ -136,38 +136,38 @@ print("平移向量 (T) (单位: mm):\n", T)
 print("\n立体标定重投影均方根误差 (RMS Error): ", ret_stereo)
 
 
-# --- 5. 立体校正与可视化 ---
-print("\n开始立体校正...")
-R1, R2, P1, P2, Q, validPixROI1, validPixROI2 = cv2.stereoRectify(
-    M1, d1, M2, d2, img_shape, R, T)
-left_map1, left_map2 = cv2.initUndistortRectifyMap(M1, d1, R1, P1, img_shape, cv2.CV_16SC2)
-right_map1, right_map2 = cv2.initUndistortRectifyMap(M2, d2, R2, P2, img_shape, cv2.CV_16SC2)
-print("正在生成立体校正可视化图...")
-img_l_orig = cv2.imread(left_images[0])
-img_r_orig = cv2.imread(right_images[0])
-dst_l = cv2.remap(img_l_orig, left_map1, left_map2, cv2.INTER_LINEAR)
-dst_r = cv2.remap(img_r_orig, right_map1, right_map2, cv2.INTER_LINEAR)
-h, w = dst_l.shape[:2]
-combined_rectified_img = np.zeros((h, w * 2, 3), dtype=np.uint8)
-combined_rectified_img[:, :w, :] = dst_l
-combined_rectified_img[:, w:, :] = dst_r
-for i in range(20, h, 25):
-    cv2.line(combined_rectified_img, (0, i), (w * 2, i), (0, 255, 0), 1)
-plt.figure(figsize=(15, 7))
-plt.imshow(cv2.cvtColor(combined_rectified_img, cv2.COLOR_BGR2RGB))
-plt.title('Stereo Rectified Image with Epipolar Lines')
-plt.axis('off')
-plt.savefig(os.path.join(output_dir, "rectified_image.png"))
-plt.show()
+# # --- 5. 立体校正与可视化 ---
+# print("\n开始立体校正...")
+# R1, R2, P1, P2, Q, validPixROI1, validPixROI2 = cv2.stereoRectify(
+#     M1, d1, M2, d2, img_shape, R, T)
+# left_map1, left_map2 = cv2.initUndistortRectifyMap(M1, d1, R1, P1, img_shape, cv2.CV_16SC2)
+# right_map1, right_map2 = cv2.initUndistortRectifyMap(M2, d2, R2, P2, img_shape, cv2.CV_16SC2)
+# print("正在生成立体校正可视化图...")
+# img_l_orig = cv2.imread(left_images[0])
+# img_r_orig = cv2.imread(right_images[0])
+# dst_l = cv2.remap(img_l_orig, left_map1, left_map2, cv2.INTER_LINEAR)
+# dst_r = cv2.remap(img_r_orig, right_map1, right_map2, cv2.INTER_LINEAR)
+# h, w = dst_l.shape[:2]
+# combined_rectified_img = np.zeros((h, w * 2, 3), dtype=np.uint8)
+# combined_rectified_img[:, :w, :] = dst_l
+# combined_rectified_img[:, w:, :] = dst_r
+# for i in range(20, h, 25):
+#     cv2.line(combined_rectified_img, (0, i), (w * 2, i), (0, 255, 0), 1)
+# plt.figure(figsize=(15, 7))
+# plt.imshow(cv2.cvtColor(combined_rectified_img, cv2.COLOR_BGR2RGB))
+# plt.title('Stereo Rectified Image with Epipolar Lines')
+# plt.axis('off')
+# plt.savefig(os.path.join(output_dir, "rectified_image.png"))
+# plt.show()
 
 
-# --- 6. 保存标定结果 ---
-print("\n正在保存标定结果...")
-calibration_data = {
-    'M1': M1, 'd1': d1, 'M2': M2, 'd2': d2, 'R': R, 'T': T, 'E': E, 'F': F,
-    'R1': R1, 'R2': R2, 'P1': P1, 'P2': P2, 'Q': Q, 'image_size': img_shape,
-    'valid_roi1': validPixROI1, 'valid_roi2': validPixROI2, 'reprojection_error': ret_stereo
-}
-np.savez(os.path.join(output_dir, "stereo_calibration.npz"), **calibration_data)
-print(f"标定数据已保存至 {os.path.join(output_dir, 'stereo_calibration.npz')}")
-print("\n标定流程成功结束！")
+# # --- 6. 保存标定结果 ---
+# print("\n正在保存标定结果...")
+# calibration_data = {
+#     'M1': M1, 'd1': d1, 'M2': M2, 'd2': d2, 'R': R, 'T': T, 'E': E, 'F': F,
+#     'R1': R1, 'R2': R2, 'P1': P1, 'P2': P2, 'Q': Q, 'image_size': img_shape,
+#     'valid_roi1': validPixROI1, 'valid_roi2': validPixROI2, 'reprojection_error': ret_stereo
+# }
+# np.savez(os.path.join(output_dir, "stereo_calibration.npz"), **calibration_data)
+# print(f"标定数据已保存至 {os.path.join(output_dir, 'stereo_calibration.npz')}")
+# print("\n标定流程成功结束！")
